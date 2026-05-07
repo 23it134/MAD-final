@@ -144,23 +144,53 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            Text('Daily Study Progress', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
+            Text('Daily Study Progress', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
             Card(
-              color: Colors.indigo.withValues(alpha: 0.1),
-              child: ListTile(
-                leading: const Icon(Icons.today, color: Colors.indigo, size: 32),
-                title: Text('Today\'s Plan: $todaySessionsCount session(s)'),
-                subtitle: Text('Total Time: ${todayPlannedMinutes ~/ 60}h ${todayPlannedMinutes % 60}m'),
-                trailing: CircularProgressIndicator(
-                  value: todayPlannedMinutes > 0 ? 1.0 : 0.0, // Mock progress based on planning
-                  color: Colors.indigo,
-                  backgroundColor: Colors.indigo.withValues(alpha: 0.2),
+              margin: EdgeInsets.zero,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(color: Colors.deepPurple.withValues(alpha: 0.1), shape: BoxShape.circle),
+                      child: const Icon(Icons.today, color: Colors.deepPurple, size: 28),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Today\'s Plan: $todaySessionsCount session(s)', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          const SizedBox(height: 4),
+                          Text('Total Time: ${todayPlannedMinutes ~/ 60}h ${todayPlannedMinutes % 60}m', style: TextStyle(color: Colors.grey.shade600)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CircularProgressIndicator(
+                            value: todayPlannedMinutes > 0 ? 1.0 : 0.0,
+                            strokeWidth: 6,
+                            strokeCap: StrokeCap.round,
+                            color: Colors.deepPurple,
+                            backgroundColor: Colors.deepPurple.withValues(alpha: 0.1),
+                          ),
+                          const Center(child: Icon(Icons.bolt, color: Colors.deepPurple, size: 20)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            Text('Needs Attention', style: Theme.of(context).textTheme.titleLarge),
+            Text('Needs Attention', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             if (sortedSubjects.isNotEmpty)
               Card(
@@ -187,17 +217,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildStatCard(String title, String count, Color color) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        gradient: LinearGradient(
+          colors: [color.withValues(alpha: 0.7), color],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4)),
+        ],
       ),
       child: Column(
         children: [
-          Text(count, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
+          Text(count, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)),
           const SizedBox(height: 4),
-          Text(title, style: TextStyle(fontSize: 14, color: color.withValues(alpha: 0.8))),
+          Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Colors.white70, fontWeight: FontWeight.w500)),
         ],
       ),
     );
