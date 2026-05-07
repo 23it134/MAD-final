@@ -102,8 +102,16 @@ class _StudySchedulingScreenState extends ConsumerState<StudySchedulingScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (selectedSubjectId != null && selectedTopicId != null) {
-                    final duration = int.tryParse(durationController.text) ?? 60;
+                    final duration = int.tryParse(durationController.text) ?? 0;
+                    if (duration <= 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid duration (e.g. 60).')));
+                      return;
+                    }
                     final dt = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+                    if (dt.isBefore(DateTime.now())) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cannot schedule a session in the past.')));
+                      return;
+                    }
                     ref.read(sessionsProvider.notifier).addSession(
                       StudySession(
                         id: _uuid.v4(),
@@ -114,6 +122,7 @@ class _StudySchedulingScreenState extends ConsumerState<StudySchedulingScreen> {
                       ),
                     );
                     Navigator.pop(ctx);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Session scheduled successfully!')));
                   }
                 },
                 child: const Text('Schedule'),

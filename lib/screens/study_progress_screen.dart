@@ -48,6 +48,8 @@ class StudyProgressScreen extends ConsumerWidget {
                               onChanged: (val) {
                                 if (val != null) {
                                   ref.read(subjectsProvider.notifier).updateTopicStatus(subject.id, topic.id, val);
+                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Topic status updated to $val.')));
                                 }
                               },
                             ),

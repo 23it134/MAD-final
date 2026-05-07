@@ -33,6 +33,9 @@ class _SubjectManagementScreenState extends ConsumerState<SubjectManagementScree
                   Subject(id: _uuid.v4(), name: controller.text, topics: []),
                 );
                 Navigator.pop(ctx);
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Subject added successfully!')));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Subject name cannot be empty.')));
               }
             },
             child: const Text('Add'),
@@ -69,12 +72,19 @@ class _SubjectManagementScreenState extends ConsumerState<SubjectManagementScree
           ElevatedButton(
             onPressed: () {
               if (nameController.text.isNotEmpty && timeController.text.isNotEmpty) {
-                final time = int.tryParse(timeController.text) ?? 60;
+                final time = int.tryParse(timeController.text) ?? 0;
+                if (time <= 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid estimated time.')));
+                  return;
+                }
                 ref.read(subjectsProvider.notifier).addTopic(
                   subject.id,
                   Topic(id: _uuid.v4(), name: nameController.text, estimatedMinutes: time),
                 );
                 Navigator.pop(ctx);
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Topic added successfully!')));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Topic name and time cannot be empty.')));
               }
             },
             child: const Text('Add'),
